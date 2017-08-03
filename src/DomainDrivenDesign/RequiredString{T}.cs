@@ -43,14 +43,9 @@ namespace CWiz.DomainDrivenDesign
             return lambda.Compile();
         }
 
-        public override bool Equals(RequiredString<T> other)
-        {
-            return Value == other.Value;
-        }
-
-        protected override int GetHashCodeCore()
-        {
-            return Value.GetHashCode();
-        }
+        //protected override int GetHashCodeCore()
+        //{
+        //    return Value.GetHashCode();
+        //}
     }
 }

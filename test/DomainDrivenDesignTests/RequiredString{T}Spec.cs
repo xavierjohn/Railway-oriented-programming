@@ -1,8 +1,26 @@
-﻿using Xunit;
+﻿using CWiz.DomainDrivenDesign;
 using CWiz.RailwayOrientedProgramming;
+using Xunit;
 
 namespace DomainDrivenDesignTests
 {
+    public class TrackingId : RequiredString<TrackingId>
+    {
+        private TrackingId(string value) : base(value)
+        {
+        }
+
+        public static explicit operator TrackingId(string trackingId)
+        {
+            return Create(trackingId).Value;
+        }
+
+        public static implicit operator string(TrackingId trackingId)
+        {
+            return trackingId.Value;
+        }
+    }
+
     public class RequiredString_T_Spec
     {
         [Fact]
@@ -13,15 +31,6 @@ namespace DomainDrivenDesignTests
         }
 
         [Fact]
-        public void Two_RequiredString_with_same_value_should_be_equal()
-        {
-            var trackingId1 = TrackingId.Create("SameValue");
-            var trackingId2 = TrackingId.Create("SameValue");
-            var result = Result.Combine(trackingId2, trackingId1);
-            Assert.True(result.IsSuccess);
-            Assert.Equal(trackingId1.Value, trackingId2.Value);
-        }
-        [Fact]
         public void Two_RequiredString_with_different_value_should_be__not_equal()
         {
             var trackingId1 = TrackingId.Create("Value1");
@@ -29,6 +38,16 @@ namespace DomainDrivenDesignTests
             var result = Result.Combine(trackingId2, trackingId1);
             Assert.True(result.IsSuccess);
             Assert.NotEqual(trackingId1.Value, trackingId2.Value);
+        }
+
+        [Fact]
+        public void Two_RequiredString_with_same_value_should_be_equal()
+        {
+            var trackingId1 = TrackingId.Create("SameValue");
+            var trackingId2 = TrackingId.Create("SameValue");
+            var result = Result.Combine(trackingId2, trackingId1);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(trackingId1.Value, trackingId2.Value);
         }
     }
 }

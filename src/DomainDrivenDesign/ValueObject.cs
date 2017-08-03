@@ -1,28 +1,24 @@
 ﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
+using static System.Linq.Expressions.Expression;
 
 namespace CWiz.DomainDrivenDesign
 {
     public abstract class ValueObject<T> : IEquatable<T>
         where T : ValueObject<T>
     {
-        public override bool Equals(object obj)
-        {
-            if (obj is T valueObject)
-                return Equals(valueObject);
+        private static readonly Lazy<Func<T, T, bool>> equals = new Lazy<Func<T, T, bool>>(NewEqualsFunc);
 
-            return false;
+        public bool Equals(T other)
+        {
+            return other != null && equals.Value((T) this, other);
         }
 
-        //protected abstract bool EqualsCore(T other);
-
-        public override int GetHashCode()
+        public sealed override bool Equals(object obj)
         {
-            return GetHashCodeCore();
+            return Equals(obj as T);
         }
-
-        protected abstract int GetHashCodeCore();
-
-        public abstract bool Equals(T other);
 
         public static bool operator ==(ValueObject<T> a, ValueObject<T> b)
         {
@@ -32,12 +28,48 @@ namespace CWiz.DomainDrivenDesign
             if (ReferenceEquals(b, null))
                 return false;
 
-            return a.Equals(b);
+            return equals.Value((T) a, (T) b);
         }
 
         public static bool operator !=(ValueObject<T> a, ValueObject<T> b)
         {
-            return !(a == b);
+            if (ReferenceEquals(a, null))
+                return !ReferenceEquals(b, null);
+
+            if (ReferenceEquals(b, null))
+                return true;
+
+            return !equals.Value((T) a, (T) b);
+        }
+
+        private static Func<T, T, bool> NewEqualsFunc()
+        {
+            var type = typeof(T);
+            var equal = default(Expression);
+            var item1 = Parameter(type, "item1");
+            var item2 = Parameter(type, "item2");
+
+
+            using (var properties = type.GetRuntimeProperties().GetEnumerator())
+            {
+                if (!properties.MoveNext())
+                    return (i1, i2) => true;
+
+                // item1.Property == item2.Property
+                var property = properties.Current;
+                equal = Equal(Property(item1, property), Property(item2, property));
+
+                while (properties.MoveNext())
+                {
+                    // folder other properties
+                    // ( previous ) && ( item1.Property == item2.Property )
+                    property = properties.Current;
+                    equal = AndAlso(equal, Equal(Property(item1, property), Property(item2, property)));
+                }
+            }
+
+            var lambda = Lambda<Func<T, T, bool>>(equal, item1, item2);
+            return lambda.Compile();
         }
     }
 }
