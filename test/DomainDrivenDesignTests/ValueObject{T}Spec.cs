@@ -28,9 +28,10 @@ namespace DomainDrivenDesignTests
             var fname = "Xavier";
             var lname = "John";
             var age = 99;
-            var phoneNumbers = new List<string> {"123-456-7890", "234-567-8901"};
-            var instance1 = new Person(fname, lname, age, phoneNumbers);
-            var instance2 = new Person(fname, lname, age, phoneNumbers);
+            var phoneNumbers1 = new List<string> {"123-456-7890", "234-567-8901"};
+            var phoneNumbers2 = new List<string> { "123-456-7890", "234-567-8901" };
+            var instance1 = new Person(fname, lname, age, phoneNumbers1);
+            var instance2 = new Person(fname, lname, age, phoneNumbers2);
             Assert.Equal(instance1, instance2);
         }
 
@@ -49,9 +50,10 @@ namespace DomainDrivenDesignTests
             var fname = "Xavier";
             var lname = "John";
             var age = 99;
-            var phoneNumbers = new List<string> {"123-456-7890", "234-567-8901"};
-            var instance1 = new Person(fname, lname, age, phoneNumbers);
-            var instance2 = new Person(fname, lname, age, phoneNumbers);
+            var phoneNumbers1 = new List<string> { "123-456-7890", "234-567-8901" };
+            var phoneNumbers2 = new List<string> { "123-456-7890", "234-567-8901" };
+            var instance1 = new Person(fname, lname, age, phoneNumbers1);
+            var instance2 = new Person(fname, lname, age, phoneNumbers2);
             Assert.True(instance1 == instance2);
         }
 
