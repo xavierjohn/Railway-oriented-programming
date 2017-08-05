@@ -50,7 +50,7 @@ namespace CWiz.DomainDrivenDesign
         private static Func<T, T, bool> NewEqualsFunc()
         {
             var type = typeof(T);
-            var equal = default(Expression);
+            Expression equal = Constant(true); // Dummy node
             var item1 = Parameter(type, "item1");
             var item2 = Parameter(type, "item2");
 
@@ -58,45 +58,28 @@ namespace CWiz.DomainDrivenDesign
             {
                 if (!properties.MoveNext())
                     return (i1, i2) => true;
-
-                // item1.Property == item2.Property
-                var property = properties.Current;
-                var propertyType = property.PropertyType.GetTypeInfo();
-
-                if (propertyType.IsEnumerable())
-                {
-                    var method = sequenceEquals.Value.MakeGenericMethod(propertyType.GetItemType());
-                    equal = Call(method, Property(item1, property), Property(item2, property));
-                }
-                else
-                {
-                    equal = Equal(Property(item1, property), Property(item2, property));
-                }
-
-                while (properties.MoveNext())
-                {
-                    // folder other properties
-                    // ( previous ) && ( item1.Property == item2.Property )
-                    property = properties.Current;
-                    propertyType = property.PropertyType.GetTypeInfo();
-
-                    if (propertyType.IsEnumerable())
-                    {
-                        var method = sequenceEquals.Value.MakeGenericMethod(propertyType.GetItemType());
-                        equal = AndAlso(equal, Call(method, Property(item1, property), Property(item2, property)));
-                    }
-                    else
-                    {
-                        equal = AndAlso(equal, Equal(Property(item1, property), Property(item2, property)));
-                    }
-                }
+                do
+                    AddPropertyToCompareToExpression(properties.Current);
+                while (properties.MoveNext());
             }
 
             var lambda = Lambda<Func<T, T, bool>>(equal, item1, item2);
-
             Debug.WriteLine(lambda);
-
             return lambda.Compile();
+
+            void AddPropertyToCompareToExpression(PropertyInfo property)
+            {
+                var propertyType = property.PropertyType.GetTypeInfo();
+                if (propertyType.IsEnumerable())
+                {
+                    var method = sequenceEquals.Value.MakeGenericMethod(propertyType.GetItemType());
+                    equal = AndAlso(equal, Call(method, Property(item1, property), Property(item2, property)));
+                }
+                else
+                {
+                    equal = AndAlso(equal, Equal(Property(item1, property), Property(item2, property)));
+                }
+            }
         }
 
         static MethodInfo NewSequenceEqualsOfT() =>
