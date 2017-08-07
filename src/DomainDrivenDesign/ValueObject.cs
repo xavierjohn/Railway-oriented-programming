@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
@@ -17,7 +16,7 @@ namespace CWiz.DomainDrivenDesign
 
         public bool Equals(T other)
         {
-            return other != null && equals.Value((T)this, other);
+            return other != null && equals.Value((T) this, other);
         }
 
         public sealed override bool Equals(object obj)
@@ -33,7 +32,7 @@ namespace CWiz.DomainDrivenDesign
             if (ReferenceEquals(b, null))
                 return false;
 
-            return equals.Value((T)a, (T)b);
+            return equals.Value((T) a, (T) b);
         }
 
         public static bool operator !=(ValueObject<T> a, ValueObject<T> b)
@@ -44,24 +43,18 @@ namespace CWiz.DomainDrivenDesign
             if (ReferenceEquals(b, null))
                 return true;
 
-            return !equals.Value((T)a, (T)b);
+            return !equals.Value((T) a, (T) b);
         }
 
         private static Func<T, T, bool> NewEqualsFunc()
         {
             var type = typeof(T);
-            Expression equal = Constant(true); // Dummy node
+            Expression equal = Constant(true);
             var item1 = Parameter(type, "item1");
             var item2 = Parameter(type, "item2");
 
-            using (var properties = type.GetRuntimeProperties().GetEnumerator())
-            {
-                if (!properties.MoveNext())
-                    return (i1, i2) => true;
-                do
-                    AddPropertyToCompareToExpression(properties.Current);
-                while (properties.MoveNext());
-            }
+            foreach (var property in type.GetRuntimeProperties())
+                AddPropertyToCompareToExpression(property);
 
             var lambda = Lambda<Func<T, T, bool>>(equal, item1, item2);
             Debug.WriteLine(lambda);
@@ -82,36 +75,28 @@ namespace CWiz.DomainDrivenDesign
             }
         }
 
-        static MethodInfo NewSequenceEqualsOfT() =>
-            typeof(ValueObject<T>).GetTypeInfo().GetMethod(nameof(SequenceEqual), NonPublic | Static);
+        private static MethodInfo NewSequenceEqualsOfT()
+        {
+            return typeof(ValueObject<T>).GetTypeInfo().GetMethod(nameof(SequenceEqual), NonPublic | Static);
+        }
 
-        static bool SequenceEqual<TItem>(IEnumerable<TItem> a, IEnumerable<TItem> b)
+        private static bool SequenceEqual<TItem>(IEnumerable<TItem> a, IEnumerable<TItem> b)
         {
             if (a == null)
-            {
                 return b == null;
-            }
 
             if (b == null)
-            {
                 return false;
-            }
 
             using (var i1 = a.GetEnumerator())
             using (var i2 = b.GetEnumerator())
             {
                 while (i1.MoveNext())
-                {
                     if (!i2.MoveNext() || !i1.Current.Equals(i2.Current))
-                    {
                         return false;
-                    }
-                }
 
                 if (i2.MoveNext())
-                {
                     return false;
-                }
             }
 
             return true;

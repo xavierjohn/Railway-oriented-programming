@@ -74,6 +74,7 @@ namespace DomainDrivenDesignTests
 
         public static IEnumerable<object[]> EqualValueObjects => new[]
         {
+            new object[] { default(ValueObjectWithoutCollection), default(ValueObjectWithoutCollection)},
             new object[] { new ValueObjectWithoutCollection("Prop1", "Prop2", 99), new ValueObjectWithoutCollection("Prop1", "Prop2", 99) },
             new object[] { new ValueObjectWithCollection(new List<string> { "123-456-7890", "234-567-8901" }), new ValueObjectWithCollection(new List<string> { "123-456-7890", "234-567-8901" }) },
             new object[]
@@ -109,6 +110,8 @@ namespace DomainDrivenDesignTests
         };
         public static IEnumerable<object[]> DifferentValueObjects => new[]
         {
+            new object[] { default(ValueObjectWithoutCollection), new ValueObjectWithoutCollection("Prop1", "Different", 99) },
+            new object[] { new ValueObjectWithoutCollection("Prop1", "Prop2", 99), default(ValueObjectWithoutCollection)},
             new object[] { new ValueObjectWithoutCollection("Prop1", "Prop2", 99), new ValueObjectWithoutCollection("Prop1", "Different", 99) },
             new object[] { new ValueObjectWithCollection(new List<string> { "123-456-7890", "234-567-8901" }), new ValueObjectWithCollection(new List<string> { "123-456-7890", "123-567-8901" }) },
             new object[]
