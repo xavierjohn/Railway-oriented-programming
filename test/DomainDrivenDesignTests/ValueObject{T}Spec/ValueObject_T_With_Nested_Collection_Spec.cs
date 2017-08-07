@@ -77,7 +77,7 @@ namespace DomainDrivenDesignTests
 
             public List<NestedClass> NestedCollection { get; set; }
 
-            public class NestedClass
+            public class NestedClass : ValueObject<NestedClass>
             {
                 public string NestedFirstProperty { get; set; }
                 public string NestedSecondProperty { get; set; }
