@@ -12,16 +12,22 @@ namespace CWiz.DomainDrivenDesign
         where T : ValueObject<T>
     {
         private static readonly Lazy<Func<T, T, bool>> equals = new Lazy<Func<T, T, bool>>(NewEqualsFunc);
+        private static readonly Lazy<Func<T, int>> getHashCode = new Lazy<Func<T, int>>(NewGetHashCodeFunc);
         private static readonly Lazy<MethodInfo> sequenceEquals = new Lazy<MethodInfo>(NewSequenceEqualsOfT);
 
         public bool Equals(T other)
         {
-            return other != null && equals.Value((T) this, other);
+            return other != null && equals.Value((T)this, other);
         }
 
         public sealed override bool Equals(object obj)
         {
             return Equals(obj as T);
+        }
+
+        public sealed override int GetHashCode()
+        {
+            return getHashCode.Value((T)this);
         }
 
         public static bool operator ==(ValueObject<T> a, ValueObject<T> b)
@@ -32,7 +38,7 @@ namespace CWiz.DomainDrivenDesign
             if (ReferenceEquals(b, null))
                 return false;
 
-            return equals.Value((T) a, (T) b);
+            return equals.Value((T)a, (T)b);
         }
 
         public static bool operator !=(ValueObject<T> a, ValueObject<T> b)
@@ -43,7 +49,7 @@ namespace CWiz.DomainDrivenDesign
             if (ReferenceEquals(b, null))
                 return true;
 
-            return !equals.Value((T) a, (T) b);
+            return !equals.Value((T)a, (T)b);
         }
 
         private static Func<T, T, bool> NewEqualsFunc()
@@ -71,6 +77,48 @@ namespace CWiz.DomainDrivenDesign
                 else
                 {
                     equal = AndAlso(equal, Equal(Property(item1, property), Property(item2, property)));
+                }
+            }
+        }
+
+        private static Func<T, int> NewGetHashCodeFunc()
+        {
+            var type = typeof(T);
+            var item1 = Parameter(type, "item1");
+
+            ParameterExpression variableExpr = Variable(typeof(int), "hashCode");
+            var listExpressions = new List<Expression>();
+            foreach (var property in type.GetRuntimeProperties())
+                AddPropertyToHashToExpression(property);
+
+            listExpressions.Add(variableExpr);
+
+            var hash = Block(new[] { variableExpr }, listExpressions);
+            var lambda = Lambda<Func<T, int>>(hash, item1);
+            Debug.WriteLine(lambda);
+            return lambda.Compile();
+
+            void AddPropertyToHashToExpression(PropertyInfo property)
+            {
+                var propertyType = property.PropertyType.GetTypeInfo();
+                if (propertyType.IsEnumerable())
+                {
+                    // TODO: Deal with IsEnumerable
+                }
+                else if (propertyType.IsValueType) // TODO: this is not always portable
+                {
+                    var multiply = Multiply(variableExpr, Constant(397));
+                    var hashCode = Call(Property(item1, property), nameof(GetHashCode), Type.EmptyTypes);
+                    var power = ExclusiveOr(multiply, hashCode);
+                    listExpressions.Add(Assign(variableExpr, power));
+                }
+                else
+                {
+                    var multiply = Multiply(variableExpr, Constant(397));
+                    var hashCode = Call(Property(item1, property), nameof(GetHashCode), Type.EmptyTypes);
+                    var tertiary = Condition(Equal(Property(item1, property), Constant(null)), Constant(0), hashCode);
+                    var power = ExclusiveOr(multiply, tertiary);
+                    listExpressions.Add(Assign(variableExpr, power));
                 }
             }
         }
