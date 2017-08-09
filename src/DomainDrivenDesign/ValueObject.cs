@@ -14,6 +14,8 @@ namespace CWiz.DomainDrivenDesign
         private static readonly Lazy<Func<T, T, bool>> equals = new Lazy<Func<T, T, bool>>(NewEqualsFunc);
         private static readonly Lazy<Func<T, int>> getHashCode = new Lazy<Func<T, int>>(NewGetHashCodeFunc);
         private static readonly Lazy<MethodInfo> sequenceEquals = new Lazy<MethodInfo>(NewSequenceEqualsOfT);
+        private static readonly Lazy<MethodInfo> sequenceHashCode = new Lazy<MethodInfo>(NewSequenceHashCodeOfT);
+
 
         public bool Equals(T other)
         {
@@ -103,7 +105,9 @@ namespace CWiz.DomainDrivenDesign
                 var propertyType = property.PropertyType.GetTypeInfo();
                 if (propertyType.IsEnumerable())
                 {
-                    // TODO: Deal with IsEnumerable
+                    var method = sequenceHashCode.Value.MakeGenericMethod(propertyType.GetItemType());
+                    var assign = AddAssign(variableExpr, Call(method, Property(item1, property)));
+                    listExpressions.Add(assign);
                 }
                 else if (propertyType.IsValueType) // TODO: this is not always portable
                 {
@@ -148,6 +152,25 @@ namespace CWiz.DomainDrivenDesign
             }
 
             return true;
+        }
+
+        private static MethodInfo NewSequenceHashCodeOfT()
+        {
+            return typeof(ValueObject<T>).GetTypeInfo().GetMethod(nameof(SequenceHashCode), NonPublic | Static);
+        }
+
+        private static int SequenceHashCode<TItem>(IEnumerable<TItem> items)
+        {
+            if (items == null)
+                return 0;
+
+            var hashCode = 0;
+            unchecked
+            {
+                foreach (var item in items)
+                    hashCode += item.GetHashCode();
+            }
+            return hashCode;
         }
     }
 }
