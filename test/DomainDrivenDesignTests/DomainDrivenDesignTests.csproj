@@ -2,14 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50;portable-net451+win8</PackageTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="xunit" Version="2.2.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />-->
-    <PackageReference Include="more.xunit" Version="2.2.2" />
-    <PackageReference Include="more.xunit.runner.visualstudio" Version="2.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <!--<PackageReference Include="more.xunit" Version="2.2.2" />
+    <PackageReference Include="more.xunit.runner.visualstudio" Version="2.2.1" />-->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,9 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="xunit.runner.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-  
+
 </Project>

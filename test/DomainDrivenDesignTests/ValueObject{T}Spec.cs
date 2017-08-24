@@ -1,7 +1,5 @@
-﻿using System;
+﻿using CWiz.DomainDrivenDesign;
 using System.Collections.Generic;
-using System.Text;
-using CWiz.DomainDrivenDesign;
 using Xunit;
 
 namespace DomainDrivenDesignTests
