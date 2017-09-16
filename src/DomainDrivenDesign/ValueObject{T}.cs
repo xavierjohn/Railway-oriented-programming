@@ -168,7 +168,7 @@ namespace CWiz.DomainDrivenDesign
             unchecked
             {
                 foreach (var item in items)
-                    hashCode += item.GetHashCode();
+                    hashCode = (hashCode * 397) ^ item.GetHashCode();
             }
             return hashCode;
         }
