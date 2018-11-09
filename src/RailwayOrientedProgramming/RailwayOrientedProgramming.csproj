@@ -1,9 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6</TargetFrameworks>
-    <RootNamespace>CWiz.RailwayOrientedProgramming</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Xavier John</Authors>
+    <Product>Railway Oriented Programming</Product>
+    <Copyright>2018 Xavier John</Copyright>
+    <PackageProjectUrl>https://github.com/xavierjohn/Railway-oriented-programming</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/xavierjohn/Railway-oriented-programming/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/xavierjohn/Railway-oriented-programming</RepositoryUrl>
+    <RepositoryType>C#</RepositoryType>
+    <PackageReleaseNotes>@(ReleaseNotes->'• %(Identity)','
+')</PackageReleaseNotes>
+    <PackageId>CWiz.RailwayOrientedProgramming</PackageId>
     <AssemblyName>CWiz.RailwayOrientedProgramming</AssemblyName>
+    <Description>Railway Oriented Programming primitives</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>ROP, RailwayOrientedProgramming</PackageTags>
   </PropertyGroup>
 
 </Project>
