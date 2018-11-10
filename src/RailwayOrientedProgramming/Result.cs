@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace CWiz.RailwayOrientedProgramming
 {
     public class Result
     {
+        [DebuggerDisplay("Message = {Message}, Field = {Field}")]
         public class Error
         {
-            public Error(string errorMessage, string field = null)
+            public Error(string message, string field = null)
             {
-                if (string.IsNullOrEmpty(errorMessage))
+                if (string.IsNullOrEmpty(message))
                     throw new InvalidOperationException();
-                Message = errorMessage;
+                Message = message;
                 Field = field;
             }
 
