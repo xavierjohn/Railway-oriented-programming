@@ -16,8 +16,8 @@ namespace CWiz.RailwayOrientedProgramming
                 Field = field;
             }
 
-            public string Message { get; }
             public string Field { get; }
+            public string Message { get; }
         }
 
         protected Result(bool isSuccess, ReadOnlyCollection<Error> errors)

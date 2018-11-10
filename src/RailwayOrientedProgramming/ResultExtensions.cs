@@ -23,9 +23,7 @@ namespace CWiz.RailwayOrientedProgramming
         public static Result<TOut> OnSuccess<TIn, TOut>(this Result<TIn> result, Func<TIn, Result<TOut>> func)
         {
             if (result.IsFailure)
-            {
                 return Result.Fail<TOut>(result.Errors);
-            }
 
             return func(result.Value);
         }
@@ -41,11 +39,10 @@ namespace CWiz.RailwayOrientedProgramming
             return result;
         }
 
-        public static Result<string> EnsureStringNotEmpty(this Maybe<string> maybe, Result.Error error)
+        public static Result<string> EnsureNotNullOrWhiteSpace(this Maybe<string> maybe, Result.Error error)
         {
             return maybe.ToResult(error)
-                    .OnSuccess(name => name.Trim())
-                    .Ensure(name => name != string.Empty, error);
+                    .Ensure(name => !string.IsNullOrWhiteSpace(name), error);
         }
 
         public static Result<K> Map<T, K>(this Result<T> result, Func<T, K> func)
@@ -68,9 +65,7 @@ namespace CWiz.RailwayOrientedProgramming
         public static Result<T> OnSuccess<T>(this Result<T> result, Action<T> action)
         {
             if (result.IsSuccess)
-            {
                 action(result.Value);
-            }
 
             return result;
         }
@@ -83,9 +78,7 @@ namespace CWiz.RailwayOrientedProgramming
         public static Result OnSuccess(this Result result, Action action)
         {
             if (result.IsSuccess)
-            {
                 action();
-            }
 
             return result;
         }
