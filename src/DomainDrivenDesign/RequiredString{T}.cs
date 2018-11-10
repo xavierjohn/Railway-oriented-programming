@@ -9,7 +9,8 @@ namespace CWiz.DomainDrivenDesign
     public abstract class RequiredString<T> : ValueObject<RequiredString<T>> where T : RequiredString<T>
     {
         private static readonly Lazy<Func<string, T>> CreateInstance = new Lazy<Func<string, T>>(CreateInstanceFunc);
-        private static string cannotBeEmpty = $"{typeof(T).Name} cannot be empty";
+        private static readonly Result.Error cannotBeEmptyError
+            = new Result.Error($"{typeof(T).Name} cannot be empty", $"{typeof(T).Name}");
 
         protected RequiredString(string value)
         {
@@ -21,9 +22,9 @@ namespace CWiz.DomainDrivenDesign
         public static Result<T> Create(Maybe<string> requiredStringOrNothing)
         {
             return requiredStringOrNothing
-                .ToResult(cannotBeEmpty)
+                .ToResult(cannotBeEmptyError)
                 .OnSuccess(name => name.Trim())
-                .Ensure(name => name != string.Empty, cannotBeEmpty)
+                .Ensure(name => name != string.Empty, cannotBeEmptyError)
                 .Map(name => CreateInstance.Value(name));
         }
 
@@ -42,10 +43,5 @@ namespace CWiz.DomainDrivenDesign
 
             return lambda.Compile();
         }
-
-        //protected override int GetHashCodeCore()
-        //{
-        //    return Value.GetHashCode();
-        //}
     }
 }

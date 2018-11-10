@@ -9,7 +9,8 @@ namespace CWiz.DomainDrivenDesign
     public abstract class RequiredBool<T> : ValueObject<RequiredBool<T>> where T : RequiredBool<T>
     {
         private static readonly Lazy<Func<bool, T>> CreateInstance = new Lazy<Func<bool, T>>(CreateInstanceFunc);
-        private static string cannotBeEmpty = $"{typeof(T).Name} has to be 'true' or 'false'";
+        private static readonly Result.Error cannotBeEmptyError
+            = new Result.Error($"{typeof(T).Name} has to be 'true' or 'false'", $"{typeof(T).Name}");
 
         protected RequiredBool(bool value)
         {
@@ -27,12 +28,12 @@ namespace CWiz.DomainDrivenDesign
         {
             if (bool.TryParse(input, out var value))
                 return Result<bool>.Ok(value);
-            return Result.Fail<bool>(cannotBeEmpty);
+            return Result.Fail<bool>(cannotBeEmptyError);
         }
         public static Result<T> Create(Maybe<string> requiredStringOrNothing)
         {
             return requiredStringOrNothing
-                .ToResult(cannotBeEmpty)
+                .ToResult(cannotBeEmptyError)
                 .OnSuccess(ConvertStringToBool)
                 .Map(value => CreateInstance.Value(value));
         }
@@ -52,15 +53,5 @@ namespace CWiz.DomainDrivenDesign
 
             return lambda.Compile();
         }
-
-        //public override bool Equals(RequiredBool<T> other)
-        //{
-        //    return Value == other.Value;
-        //}
-
-        //protected override int GetHashCodeCore()
-        //{
-        //    return Value.GetHashCode();
-        //}
     }
 }

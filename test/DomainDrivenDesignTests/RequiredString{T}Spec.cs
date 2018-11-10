@@ -28,6 +28,9 @@ namespace DomainDrivenDesignTests
         {
             var trackingId1 = TrackingId.Create("");
             Assert.True(trackingId1.IsFailure);
+            Assert.Single(trackingId1.Errors);
+            Assert.Equal("TrackingId cannot be empty", trackingId1.Errors[0].Message);
+            Assert.Equal("TrackingId", trackingId1.Errors[0].Field);
         }
 
         [Fact]

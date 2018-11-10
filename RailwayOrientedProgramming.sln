@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainDrivenDesign", "src\D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainDrivenDesignTests", "test\DomainDrivenDesignTests\DomainDrivenDesignTests.csproj", "{A7AFC38A-F27F-4214-9FBD-23A8A1E1284C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RailwayOrientedProgrammingTests", "test\RailwayOrientedProgrammingTests\RailwayOrientedProgrammingTests.csproj", "{7BF4D7AE-EE46-4C99-83B8-60BF41443783}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{A7AFC38A-F27F-4214-9FBD-23A8A1E1284C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7AFC38A-F27F-4214-9FBD-23A8A1E1284C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7AFC38A-F27F-4214-9FBD-23A8A1E1284C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BF4D7AE-EE46-4C99-83B8-60BF41443783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BF4D7AE-EE46-4C99-83B8-60BF41443783}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BF4D7AE-EE46-4C99-83B8-60BF41443783}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BF4D7AE-EE46-4C99-83B8-60BF41443783}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,5 +45,9 @@ Global
 		{50F861FC-6A68-4D17-B450-BA53E1489E11} = {ED8BC89D-7B3F-450B-8A27-BD880928813D}
 		{00595E29-CB93-4E8F-B5C1-33C750A6EC0E} = {ED8BC89D-7B3F-450B-8A27-BD880928813D}
 		{A7AFC38A-F27F-4214-9FBD-23A8A1E1284C} = {F2E4A07F-E4B7-40CA-BA0A-C8C206A64886}
+		{7BF4D7AE-EE46-4C99-83B8-60BF41443783} = {F2E4A07F-E4B7-40CA-BA0A-C8C206A64886}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F2696128-0A4C-4064-ACBE-810605939416}
 	EndGlobalSection
 EndGlobal
