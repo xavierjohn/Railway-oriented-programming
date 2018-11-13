@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NullGuard;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -13,7 +14,7 @@ namespace CWiz.RailwayOrientedProgramming
             public Error(string message, string field = null)
             {
                 if (string.IsNullOrEmpty(message))
-                    throw new InvalidOperationException();
+                    throw new ArgumentException("message cannot be empty.");
                 Message = message;
                 Field = field;
             }

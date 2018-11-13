@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NullGuard;
+using System;
 
 namespace CWiz.RailwayOrientedProgramming
 {

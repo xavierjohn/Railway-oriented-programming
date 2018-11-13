@@ -1,4 +1,5 @@
 ﻿using CWiz.RailwayOrientedProgramming;
+using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -32,6 +33,20 @@ namespace RailwayOrientedProgrammingTests
 
             var result = Result.Combine(successResult1, successResult2);
             Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Creating_ResultX2EError_should_fail_if_message_is_null_or_empty()
+        {
+            Action act = () => new Result.Error(null);
+
+            act.Should().Throw<ArgumentNullException>()
+               .WithMessage("[NullGuard] message is null.\nParameter name: message");
+
+            act = () => new Result.Error(string.Empty);
+
+            act.Should().Throw<ArgumentException>()
+               .WithMessage("message cannot be empty.");
         }
     }
 }
