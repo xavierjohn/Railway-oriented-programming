@@ -48,5 +48,15 @@ namespace RailwayOrientedProgrammingTests
             act.Should().Throw<ArgumentException>()
                .WithMessage("message cannot be empty.");
         }
+
+        [Fact]
+        public void Creating_ResultX2EError_should_succeed_if_optional_field_is_null_or_empty()
+        {
+            var result = new Result.Error("Error message");
+            result.Should().NotBeNull();
+
+            result = new Result.Error("Error message", string.Empty);
+            result.Should().NotBeNull();
+        }
     }
 }

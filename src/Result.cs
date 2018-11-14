@@ -19,7 +19,9 @@ namespace CWiz.RailwayOrientedProgramming
                 Field = field;
             }
 
+            [AllowNull]
             public string Field { get; }
+
             public string Message { get; }
         }
 
