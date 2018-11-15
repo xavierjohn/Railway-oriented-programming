@@ -12,14 +12,6 @@ namespace CWiz.RailwayOrientedProgramming
             return Result.Ok(maybe.Value);
         }
 
-        public static Result<TOut> OnSuccess<TIn, TOut>(this Result<TIn> result, Func<TIn, TOut> func)
-        {
-            if (result.IsFailure)
-                return Result.Fail<TOut>(result.Errors);
-
-            return Result.Ok(func(result.Value));
-        }
-
         public static Result<TOut> OnSuccess<TIn, TOut>(this Result<TIn> result, Func<TIn, Result<TOut>> func)
         {
             if (result.IsFailure)
@@ -61,26 +53,9 @@ namespace CWiz.RailwayOrientedProgramming
             return Result.Ok<K>(func());
         }
 
-
-        public static Result<T> OnSuccess<T>(this Result<T> result, Action<T> action)
-        {
-            if (result.IsSuccess)
-                action(result.Value);
-
-            return result;
-        }
-
         public static T OnBoth<T>(this Result result, Func<Result, T> func)
         {
             return func(result);
-        }
-
-        public static Result OnSuccess(this Result result, Action action)
-        {
-            if (result.IsSuccess)
-                action();
-
-            return result;
         }
     }
 }

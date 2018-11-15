@@ -59,6 +59,11 @@ namespace CWiz.RailwayOrientedProgramming
             return new Result(false, error);
         }
 
+        public static Result<T> Fail<T>(string errorMessage)
+        {
+            return new Result<T>(default(T), false, new Error(errorMessage));
+        }
+
         public static Result<T> Fail<T>(Error error)
         {
             return new Result<T>(default(T), false, error);
