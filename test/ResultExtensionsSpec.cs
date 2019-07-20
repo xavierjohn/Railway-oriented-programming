@@ -1,4 +1,5 @@
 using CWiz.RailwayOrientedProgramming;
+using FluentAssertions;
 using System;
 using Xunit;
 
@@ -45,6 +46,37 @@ namespace RailwayOrientedProgrammingTests
             Maybe<string> validString = "This is a valid string";
             var result = validString.EnsureNotNullOrWhiteSpace(new Result.Error("validString should not be null or empty", "validString"));
             Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void OnSuccess_should_be_called()
+        {
+            string validated = null;
+            Maybe<string> toValidate = "This is a valid string";
+            toValidate.EnsureNotNullOrWhiteSpace(new Result.Error("validString should not be null or empty", nameof(toValidate)))
+                .OnSuccess((valid) => { validated = valid; return Result<bool>.Ok(valid); });
+
+            validated.Should().Be(toValidate.Value);
+        }
+
+        [Fact]
+        public void OnFailure_should_be_called()
+        {
+            string validated = null;
+            bool failureCalled = false;
+            Maybe<string> toValidate = string.Empty;
+            toValidate.EnsureNotNullOrWhiteSpace(new Result.Error("toValidate should not be null or empty", nameof(toValidate)))
+                .OnSuccess((valid) => { validated = valid; return Result<bool>.Ok(valid); })
+                .OnFailure(result =>
+                  {
+                      failureCalled = true;
+                      result.Errors.Count.Should().Be(1);
+                      result.Errors[0].Message.Should().Be("toValidate should not be null or empty");
+                      return result;
+                  });
+
+            validated.Should().BeNull();
+            failureCalled.Should().BeTrue();
         }
     }
 }

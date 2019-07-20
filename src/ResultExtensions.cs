@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CWiz.RailwayOrientedProgramming
 {
@@ -18,6 +19,14 @@ namespace CWiz.RailwayOrientedProgramming
                 return Result.Fail<TOut>(result.Errors);
 
             return func(result.Value);
+        }
+
+        public static Result<T> OnFailure<T>(this Result<T> result, Func<Result<T>, Result<T>> func)
+        {
+            if (result.IsSuccess)
+                return result;
+
+            return func(result);
         }
 
         public static Result<T> Ensure<T>(this Result<T> result, Func<T, bool> predicate, Result.Error error)
