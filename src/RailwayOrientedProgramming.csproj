@@ -16,8 +16,7 @@
     <Description>Railway Oriented Programming primitives</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>ROP, RailwayOrientedProgramming</PackageTags>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
