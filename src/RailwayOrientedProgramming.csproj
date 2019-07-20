@@ -6,9 +6,9 @@
     <Product>Railway Oriented Programming</Product>
     <Copyright>2019 Xavier John</Copyright>
     <PackageProjectUrl>https://github.com/xavierjohn/Railway-oriented-programming</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/xavierjohn/Railway-oriented-programming/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/xavierjohn/Railway-oriented-programming</RepositoryUrl>
     <RepositoryType>C#</RepositoryType>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageReleaseNotes>@(ReleaseNotes->'• %(Identity)','
 ')</PackageReleaseNotes>
     <PackageId>CWiz.RailwayOrientedProgramming</PackageId>
@@ -21,6 +21,13 @@
 
   <ItemGroup>
     <PackageReference Include="NullGuard.Fody" Version="1.8.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
